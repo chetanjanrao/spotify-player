@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { albumsData } from "../assets/assets";
 import DisplayHome from "./DisplayHome";
-import {HomePage} from "./HomePage";
+import HomePage from "./HomePage";
 import AlbumTracks from "./AlbumTracks";
 import DisplayAlbum from "./DisplayAlbum";
 import DisplayPlaylist from "./DisplayPlaylist";
