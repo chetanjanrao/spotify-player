@@ -20,17 +20,22 @@ export const getHashParams = () => {
   return Object.fromEntries(hashParams.entries());
 };
 
-// Generate a random string for the state parameter for CSRF protection
-const state = Math.random().toString(36).substring(2, 15);
-localStorage.setItem("spotify_auth_state", state);
+/**
+ * Generates the Spotify login URL and sets the CSRF state token in localStorage.
+ * This should be called when the login link/button is rendered to ensure a fresh state token.
+ * @returns {string} The full login URL for the user to be redirected to.
+ */
+export default function getLoginUrl () {
+  const state = Math.random().toString(36).substring(2, 15);
+  localStorage.setItem("spotify_auth_state", state);
 
-const authParams = new URLSearchParams({
-  response_type: "token",
-  client_id: clientId,
-  scope: scopes.join(" "), // Use a space as a separator, URLSearchParams will encode it
-  redirect_uri: redirectUri,
-  state: state,
-  show_dialog: "true",
-});
-
-export const loginUrl = `${authEndPoint}?${authParams.toString()}`;
+  const authParams = new URLSearchParams({
+    response_type: "token",
+    client_id: clientId,
+    scope: scopes.join(" "),
+    redirect_uri: redirectUri,
+    state: state,
+    show_dialog: "true",
+  });
+  return `${authEndPoint}?${authParams.toString()}`;
+};
