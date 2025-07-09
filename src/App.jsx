@@ -1,67 +1,60 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import Login from "./Components/Login";
-// import { getTokenFromUrl } from "./assets/Spotify/Spotify";
-//  import {getLoginUrl} from "./assets/Spotify/Spotify.js";
 import HomePage from "./Components/HomePage";
 import SpotifyWebApi from "spotify-web-api-js";
 import { useDataLayerValue } from "./Components/DataLayer";
-const spotify = new SpotifyWebApi();
+import { getTokenFromCode } from "./assets/Spotify/Spotify";
 import "./styles.css";
-{
-  /*start from here*/
-}
+
+const spotify = new SpotifyWebApi();
+
 export default function App() {
- 
-  const albumId = "5mS4yO0p42yLgXzK1b1K1D";
-  const [{ user, token }, dispatch] = useDataLayerValue();
- 
+  const [{ token }, dispatch] = useDataLayerValue();
 
+  // This effect runs once on mount to handle the authentication redirect
   useEffect(() => {
-  if (token) {
-    console.log("Successfully authenticated with token:", accessToken);
-    dispatch({
-      type: "SET_TOKEN",
-      token: accessToken,
-    });
-  }
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+    const receivedState = urlParams.get("state");
+    const storedState = localStorage.getItem("spotify_auth_state");
 
-    
+    if (code && receivedState && receivedState === storedState) {
+      localStorage.removeItem("spotify_auth_state");
+
+      // Exchange the authorization code for an access token
+      getTokenFromCode(code)
+        .then((accessToken) => {
+          console.log("Successfully authenticated with token:", accessToken);
+          dispatch({
+            type: "SET_TOKEN",
+            token: accessToken,
+          });
+        })
+        .catch((error) => {
+          console.error("Authentication Error:", error);
+          // Optionally, handle the error, e.g., show an error message
+        });
+
+      // Clean the URL
+      window.history.pushState({}, null, "/");
+    } else if (urlParams.get("error")) {
+      console.error("Spotify login error:", urlParams.get("error"));
+    }
+  }, [dispatch]); // dispatch is stable, so this runs once
+
+  // This effect runs whenever the token changes
+  useEffect(() => {
+    if (token) {
       spotify.setAccessToken(token);
+
+      // Fetch user data
       spotify.getMe().then((user) => {
         dispatch({
           type: "SET_USER",
           user: user,
         });
       });
-      spotify.getUserPlaylists().then((playlists) => {
-        console.log("Playlists", playlists);
-        dispatch({
-          type: "SET_PLAYLISTES",
-          playlists: playlists,
-        });
-      });
-      spotify.getArtistAlbums("70B80Lwx2sxti0M1Ng9e8K", function (err, data) {
-        if (err) {
-          console.error(err);
-        } else {
-          console.log("Artist albums", data);
-          dispatch({
-            type: "SET_ALBUMS",
-            albums: data,
-          });
-        }
-      });
-      spotify
-        .getArtists(["2hazSY4Ef3aB9ATXW7F5w3", "6J6yx1t3nwIDyPXk5xa7O8"])
-        .then(
-          function (data) {
-            console.log("Artists information", data);
-          },
-          function (err) {
-            console.error(err);
-          }
-        );
 
       spotify
         .getAlbum("4rvCQOx2G4DYIq2dnTIN5U")
@@ -71,61 +64,11 @@ export default function App() {
             albumAndAlbumTracks: data,
           });
           return data?.tracks?.items?.map(function (t) {
-            return t.id;
-          });
-        })
-        .then(function (trackIds) {
-          return spotify.getTracks(trackIds);
-        })
-        .then(function (tracksInfo) {
-          console.log("trackinfo", tracksInfo);
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
-
-      // album detail for the first 10 Elvis' albums
-      spotify
-        .getArtistAlbums("43ZHCT0cAZBISjO8DG9PnE", { limit: 10 })
-        .then(function (data) {
-          return (
-            data.length > 0 &&
-            data.albums.map(function (a) {
-              return a.id;
-            })
-          );
-        })
-        .then(function (albums) {
-          return spotify.getAlbums(albums);
-        })
-        .then(function (data) {
-          console.log(data);
-        });
-
-      // search artists whose name contains 'Love'
-      spotify.searchArtists("Love").then(
-        function (data) {
-          console.log('Search artists by "Love"', data);
-        },
-        function (err) {
-          console.error(err);
-        }
-      );
-
-    
-   
-      spotify
-        .getAlbums(["2hazSY4Ef3aB9ATXW7F5w3", "6J6yx1t3nwIDyPXk5xa7O8"])
-        .then((albums) => {
-          console.log("albums", albums);
-          dispatch({
-            type: "SET_ALBUMS",
-            albums: albums,
+            return t.id; // This seems incomplete, but I'm preserving it.
           });
         });
-      
     }
-  
-, []);
+  }, [token, dispatch]); // This effect depends on the token
+
   return <>{token ? <HomePage spotify={spotify} /> : <Login />}</>;
 }
