@@ -21,11 +21,11 @@ function Login() {
                 "
       >
 
-        {loginUrl && (
+        
           <a href={loginUrl}>
             Login Spotify
           </a>
-        )}
+        
       </button>
 
     </div>
