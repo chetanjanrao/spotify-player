@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getHashParams } from './assets/Spotify/Spotify.js';
+
 import Login from "./Components/Login";
 // import { getTokenFromUrl } from "./assets/Spotify/Spotify";
 //  import {getLoginUrl} from "./assets/Spotify/Spotify.js";
@@ -12,35 +12,20 @@ import "./styles.css";
   /*start from here*/
 }
 export default function App() {
-  // const [token, setToken] = useState(null);
-  // const [albumData, setAlbumData] = useState(null);
+ 
   const albumId = "5mS4yO0p42yLgXzK1b1K1D";
   const [{ user, token }, dispatch] = useDataLayerValue();
-  //const [{ token }, dispatch] = useDataLayerValue();
+ 
 
   useEffect(() => {
-   const params = getHashParams();
-const accessToken = params.access_token;
-const receivedState = params.state;
-const storedState = localStorage.getItem("spotify_auth_state");
-    // console.log(_token);
-    if (!receivedState || receivedState !== storedState) {
-  // The state is missing or doesn't match. This could be a CSRF attack.
-  // Handle the error appropriately, e.g., show an error message and do not proceed.
-  console.error("State mismatch error. Halting authentication.");
-} else {
-  // State is valid, you can now safely use the token.
-  localStorage.removeItem("spotify_auth_state"); // Clean up the stored state
-  
-  if (accessToken) {
-    // Set the token in your app's state
+  if (token) {
     console.log("Successfully authenticated with token:", accessToken);
     dispatch({
       type: "SET_TOKEN",
       token: accessToken,
     });
   }
-}
+
     
       spotify.setAccessToken(token);
       spotify.getMe().then((user) => {
@@ -127,28 +112,8 @@ const storedState = localStorage.getItem("spotify_auth_state");
         }
       );
 
-      // search tracks whose artist's name contains 'Love'
-      spotify.searchTracks("artist:Love").then(
-        function (data) {
-          console.log('Search tracks by "Love" in the artist name', data);
-        },
-        function (err) {
-          console.error(err);
-        }
-      );
-      // spotify.searchTracks("Love").then(
-      //   function (data) {
-      //     console.log('Search by "Love"', data);
-      //     dispatch({
-      //       type: "SET_SEARCH_SONG",
-      //       searchSongs: data,
-      //     });
-      //   },
-      //   function (err) {
-      //     console.error(err);
-      //   }
-      // );
-
+    
+   
       spotify
         .getAlbums(["2hazSY4Ef3aB9ATXW7F5w3", "6J6yx1t3nwIDyPXk5xa7O8"])
         .then((albums) => {
@@ -158,8 +123,7 @@ const storedState = localStorage.getItem("spotify_auth_state");
             albums: albums,
           });
         });
-      console.log(user);
-      console.log(token);
+      
     }
   
 , []);

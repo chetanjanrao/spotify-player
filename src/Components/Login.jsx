@@ -1,13 +1,18 @@
-import React from "react";
-import SpotifyLogo from "../assets/SpotifyLogo.png";
-//import { getSpotifyAuthUrl } from "../assets/Spotify/SpotifyAuth";
-import  loginUrl  from "../assets/Spotify/Spotify";
-//import FooterPlayer from "./FooterPlayer";
-//import CallbackHandler from "./CallbackHandler";
-//import { Routes, Route } from "react-router-dom";
+// In your Login.jsx component
+import React, { useState, useEffect } from 'react';
+import { getLoginUrl } from '../assets/Spotify/Spotify'; // Adjust path if needed
+import SpotifyLogo from "../assets/SpotifyLogo.png"// Adjust path if needed
+function Login() {
+  const [loginUrl, setLoginUrl] = useState('');
 
-export default function Login() {
+  useEffect(() => {
+    // We call the async function and set the URL in our state
+    getLoginUrl().then(url => setLoginUrl(url));
+  }, []);
+
   return (
+
+
     <div className="h-[100%] w-full bg-black flex justify-center flex-col items-center pb-3 space-y-5">
       <img src={SpotifyLogo} alt="spotify-logo" />
       <h1 className="text-amber-100 text-2xl font-bold">Log In</h1>
@@ -15,11 +20,17 @@ export default function Login() {
         className="bg-green-600 pl-10 pr-10 pt-3 pb-3 rounded-4xl text-white font-bold hover:cursor-pointer
                 "
       >
-        <a href={loginUrl}>Open Spotify</a>
+
+        {loginUrl && (
+          <a href={loginUrl}>
+            Login Spotify
+          </a>
+        )}
       </button>
-      {/* <button className="bg-green-600 pl-10 pr-10 pt-3 pb-3 rounded-4xl text-white font-bold hover:cursor-pointer">
-        Get Tokens
-      </button> */}
+
     </div>
+    
   );
 }
+
+export default Login;
