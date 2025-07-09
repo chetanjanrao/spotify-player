@@ -1,9 +1,6 @@
 export const authEndPoint = "https://accounts.spotify.com/authorize";
-// export const redirectUri = "http://localhost:3000/";
-// const redirectUri = "https://tmzn3p-5173.csb.app/";
-const redirectUri = "https://spotifstream.netlify.app/"
+const redirectUri = "https://spotifstream.netlify.app/";
 const clientId = "5b82a28ff387492cac57e5a9a982b84d";
-const response_type = "code";
 const scopes = [
   "user-read-currently-playing",
   "user-read-recently-played",
@@ -14,16 +11,26 @@ const scopes = [
   "playlist-read-collaborative",
 ];
 
-export const getTokenFromUrl = () => {
-  return window.location.hash
-    .substring(1)
-    .split("&")
-    .reduce((initial, item) => {
-      var parts = item.split("=");
-      initial[parts[0]] = decodeURIComponent(parts[1]);
-      return initial;
-    }, {});
+/**
+ * Parses the access token and other parameters from the URL hash.
+ * @returns {object} An object containing the URL hash parameters.
+ */
+export const getHashParams = () => {
+  const hashParams = new URLSearchParams(window.location.hash.substring(1));
+  return Object.fromEntries(hashParams.entries());
 };
-export const loginUrl = `${authEndPoint}?&scope=${scopes.join(
-	"%20"
-)}&response_type=token&show_dialog=true&client_id=${clientId}&redirect_uri=${redirectUri}`
+
+// Generate a random string for the state parameter for CSRF protection
+const state = Math.random().toString(36).substring(2, 15);
+localStorage.setItem("spotify_auth_state", state);
+
+const authParams = new URLSearchParams({
+  response_type: "token",
+  client_id: clientId,
+  scope: scopes.join(" "), // Use a space as a separator, URLSearchParams will encode it
+  redirect_uri: redirectUri,
+  state: state,
+  show_dialog: "true",
+});
+
+export const loginUrl = `${authEndPoint}?${authParams.toString()}`;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { getHashParams } from './assets/Spotify/Spotify.js';
 import Login from "./Components/Login";
-import { getTokenFromUrl } from "./assets/Spotify/Spotify";
+// import { getTokenFromUrl } from "./assets/Spotify/Spotify";
 import HomePage from "./Components/HomePage";
 import SpotifyWebApi from "spotify-web-api-js";
 import { useDataLayerValue } from "./Components/DataLayer";
@@ -17,16 +18,30 @@ export default function App() {
   //const [{ token }, dispatch] = useDataLayerValue();
 
   useEffect(() => {
-    const hash = getTokenFromUrl();
-    window.location.hash = "";
-    const _token = hash.access_token;
+   const params = getHashParams();
+const accessToken = params.access_token;
+const receivedState = params.state;
+const storedState = localStorage.getItem("spotify_auth_state");
     // console.log(_token);
-    if (_token) {
-      dispatch({
-        type: "SET_TOKEN",
-        token: _token,
-      });
-      spotify.setAccessToken(_token);
+    if (!receivedState || receivedState !== storedState) {
+  // The state is missing or doesn't match. This could be a CSRF attack.
+  // Handle the error appropriately, e.g., show an error message and do not proceed.
+  console.error("State mismatch error. Halting authentication.");
+} else {
+  // State is valid, you can now safely use the token.
+  localStorage.removeItem("spotify_auth_state"); // Clean up the stored state
+  
+  if (accessToken) {
+    // Set the token in your app's state
+    console.log("Successfully authenticated with token:", accessToken);
+    dispatch({
+      type: "SET_TOKEN",
+      token: accessToken,
+    });
+  }
+}
+    
+      spotify.setAccessToken(token);
       spotify.getMe().then((user) => {
         dispatch({
           type: "SET_USER",
@@ -145,6 +160,7 @@ export default function App() {
       console.log(user);
       console.log(token);
     }
-  }, []);
+  
+, []);
   return <>{token ? <HomePage spotify={spotify} /> : <Login />}</>;
 }
