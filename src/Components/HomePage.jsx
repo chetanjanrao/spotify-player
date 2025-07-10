@@ -12,11 +12,8 @@ export default function HomePage({ spotify }) {
    
     // console.log(_token);
     if (token) {
-      dispatch({
-        type: "SET_TOKEN",
-        token: _token,
-      });
-      spotify.setAccessToken(_token);
+      
+      spotify.setAccessToken(token);
       spotify.getMe().then((user) => {
         dispatch({
           type: "SET_USER",
