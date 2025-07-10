@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import Sidebar from "./Sidebar";
 import Display from "./Display";
 import FooterPlayer from "./FooterPlayer";
