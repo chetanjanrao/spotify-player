@@ -6,8 +6,12 @@ function Login() {
   const [loginUrl, setLoginUrl] = useState('');
 
   useEffect(() => {
-    // We call the async function and set the URL in our state
-    getLoginUrl().then(url => setLoginUrl(url));
+    const urlParams = new URLSearchParams(window.location.search);
+    // Only generate a new login URL if we are not in the middle of an auth callback.
+    // This prevents overwriting the code_verifier in localStorage.
+    if (!urlParams.has('code')) {
+      getLoginUrl().then(url => setLoginUrl(url));
+    }
   }, []);
 
   return (
@@ -18,18 +22,13 @@ function Login() {
       <h1 className="text-amber-100 text-2xl font-bold">Log In</h1>
       <button
         className="bg-green-600 pl-10 pr-10 pt-3 pb-3 rounded-4xl text-white font-bold hover:cursor-pointer
-                "
+               "
       >
-
-        
           <a href={loginUrl}>
             Login Spotify
-          </a>
-        
+          </a>        
       </button>
-
     </div>
-    
   );
 }
 

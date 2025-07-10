@@ -55,6 +55,7 @@ export const getLoginUrl = async () => {
 };
 
 export const getTokenFromCode = async (code) => {
+  console.log("Received code:", code);
   const codeVerifier = window.localStorage.getItem('spotify_code_verifier');
   if (!codeVerifier) {
     throw new Error("Code verifier not found in localStorage.");
@@ -72,12 +73,9 @@ export const getTokenFromCode = async (code) => {
     }),
   });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(`Error fetching token: ${errorData.error_description || response.statusText}`);
-  }
+  
 
   const tokenData = await response.json();
-  window.localStorage.removeItem('spotify_code_verifier');
+  window.localStorage.setItem('spotify_access_token', tokenData.access_token);
   return tokenData.access_token;
 };
