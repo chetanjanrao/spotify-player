@@ -28,6 +28,7 @@ function Login() {
             Login Spotify
           </a>        
       </button>
+      <p className='font-semibold text-white font-roboto'><strong>Note:</strong> This app is for <strong>Spotify Premium users</strong> only.</p>
     </div>
   );
 }
