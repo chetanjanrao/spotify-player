@@ -129,8 +129,8 @@ export default function HomePage({ spotify }) {
             albums: albums,
           });
         });
-      console.log(user);
-      console.log(token);
+      //console.log(user);    working
+      //console.log(token);   working
     }
   }, []);
   return (

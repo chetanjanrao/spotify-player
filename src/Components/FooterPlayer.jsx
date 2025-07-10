@@ -8,27 +8,7 @@ export default function Player() {
   const [playStatus, setPlayStatus] = useState(true);
   const [{ selectedTrackId }, dispatch] = useDataLayerValue();
 
-  // function handlePlayStatus() {
-  //   if (playStatus) {
-  //     spotify.play().catch(console.error);
-  //     setPlayStatus(!playStatus);
-  //   } else {
-  //     spotify.pause().catch(console.error);
-  //     setPlayStatus(!playStatus);
-  //   }
-  // }
-  // function handleNextSong() {
-  //   spotify.skipToNext().then(
-  //     () => console.log("Skipped to next track"),
-  //     (err) => console.error("Error skipping next:", err)
-  //   );
-  // }
-  // function handlePrevSong() {
-  //   spotify.skipToPrevious().then(
-  //     () => console.log("Skipped to previous track"),
-  //     (err) => console.error("Error skipping previous:", err)
-  //   );
-  // }
+  
   function handlePlay(selectedTrackId) {
     spotify
       .play({
@@ -61,10 +41,7 @@ export default function Player() {
     <div className="h-[10%] bg-black flex justify-between items-center text-white px-4">
       <div className="hidden lg:flex  items-center gap-4">
          <img className="w-12" src={assets.music_player_ring} alt="logo" />
-        {/*<div>
-          <p>{12}</p>
-          <p>{45}</p>
-        </div> */}
+    
       </div>
       <div className="flex flex-col  items-center gap-1 m-auto">
         <div className="flex gap-4">
@@ -104,18 +81,7 @@ export default function Player() {
             alt="loop-icon"
           />
         </div>
-        {/*Song Progress bar */}
-        {/* <div className="flex items-center gap-2">
-          <p>
-            {0}:{0}{" "}
-          </p>
-          <div className="w-[60vw] max-w-[500px] bg-gray-300 rounded-full cursor-pointer">
-            <hr className="h-1 border-none w-10 bg-green-800 rounded-full" />
-          </div>
-          <p>
-            {3}:{25}
-          </p>
-        </div> */}
+        
       </div>
       <div className="hidden lg:flex items-center gap-2 opacity-75">
         <img

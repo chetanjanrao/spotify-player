@@ -1,11 +1,9 @@
 import React from "react";
 import Navbar from "./Navbar";
-// import { albumsData, songsData } from "../assets/assets";
-// import Albumitem from "./AlbumItem";
-// import Songitem from "./Songitem";
+
 import { useDataLayerValue } from "./DataLayer";
 import { useNavigate } from "react-router-dom";
-//import SongItem from "./SongItem";
+
 {
   /*Start */
 }

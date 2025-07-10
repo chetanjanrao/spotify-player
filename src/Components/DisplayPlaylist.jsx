@@ -29,9 +29,9 @@ export default function DisplayPlaylist({ user }) {
       })
       .then((res) => {
         const playlist = res.data;
-        console.log("chetan Playlist", playlist);
-        console.log("Playlist Name:", playlist.name);
-        console.log("Total Tracks:", playlist.tracks.total);
+        // console.log("chetan Playlist", playlist);
+        // console.log("Playlist Name:", playlist.name);
+        // console.log("Total Tracks:", playlist.tracks.total);
         dispatch({
           type: "SET_PLAYLISTTRACKS",
           playlistTracks: playlist,
@@ -39,11 +39,11 @@ export default function DisplayPlaylist({ user }) {
         playlist.tracks.items.forEach((item, index) => {
           const track = item.track;
 
-          console.log(
-            `${index + 1}. ${track.name} by ${track.artists
-              .map((a) => a.name)
-              .join(", ")}`
-          );
+          // console.log(
+          //   `${index + 1}. ${track.name} by ${track.artists
+          //     .map((a) => a.name)
+          //     .join(", ")}`
+          // );
         });
       })
       .catch((err) => console.error("Error getting playlist:", err));
@@ -53,17 +53,8 @@ export default function DisplayPlaylist({ user }) {
     <div>
       <Navbar user={user} />
       <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end">
-        {/* <img
-          src="/path/to/image.jpg"
-          alt="Background"
-          class="h-full w-full object-cover"
-        /> */}
+        
 
-        {/* <img
-          className="w-48 rounded"
-          src={playlistTracks?.images[0]}
-          alt={playlistTracks?.type}
-        /> */}
         {playlistTracks?.images && playlistTracks.images.length > 0 && (
           <img
             className="w-48 rounded"

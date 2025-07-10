@@ -25,7 +25,7 @@ export default function App() {
       // Exchange the authorization code for an access token
       getTokenFromCode(code)
         .then((accessToken) => {
-          console.log("Successfully authenticated with token:", accessToken);
+          //console.log("Successfully authenticated with token:", accessToken);  working
           dispatch({
             type: "SET_TOKEN",
             token: accessToken,

@@ -4,21 +4,15 @@ import { assets } from "../assets/assets";
 import { useDataLayerValue } from "./DataLayer";
 import msToMinutesAndSeconds from "../utils/msToDecimalMinutes";
 
-// import { useParams } from "react-router-dom";
-// import { albumsData, assets, songsData } from "../assets/assets";
-// import { PlayerContext } from "../context/PlayerContext";
 export default function DisplayAlbum({ user }) {
-  // const [{ selectedTrackId }, dispatch] = useDataLayerValue();
+
   function playTrackWithId(id) {
     dispatch({
       type: "SET_SELECTEDTRACTID",
       selectedTrackId: id,
     });
   }
-  //   const { id } = useParams();
-  //   let albumData = albumsData[id];
-  //   const { playWithId } = useContext(PlayerContext);
-  //   console.log(albumData);
+
   const [{ albumAndAlbumTracks }, dispatch] = useDataLayerValue();
 
   return (
